@@ -170,16 +170,16 @@ public class Main {
     }//fecha main
  }//Fecha classe
 
- //Antes de tudo vale explicar o seguinte: aparentemente em java nao existe uma função nativa para apenas deletar uma linha
- //o que isso significa? Que o jeito facil nao existe... O metodo para passar por esse obstaculo é armazenar a linha a ser excluida em uma varivael,
- // depois disso criar um array para colocar tudo o que está armazenado no arquivo, menos a linha marcada para exclusãoo, ou seja,
- //toda vez que o programa for garvar uma informação no array ele irá verificar se aquele numero nao é o mesma da linha marcada para exclusao (veja na linha 112), caso seja o programa irá pular
+//Antes de tudo vale explicar o seguinte: aparentemente em java nao existe uma função nativa para apenas deletar uma linha
+//o que isso significa? Que o jeito facil nao existe... O metodo para passar por esse obstaculo é armazenar a linha a ser excluida em uma varivael,
+// depois disso criar um array para colocar tudo o que está armazenado no arquivo, menos a linha marcada para exclusãoo, ou seja,
+//toda vez que o programa for garvar uma informação no array ele irá verificar se aquele numero nao é o mesma da linha marcada para exclusao (veja na linha 112), caso seja o programa irá pular
 // aquele conjunto de informações, detalhe: nesse processo haverá um contador (denominado i) para o arquivo e um contador (denominado posicaoArray) para marcar o array, isto é necessario visto
 // o array no final vai sempre estar em um numero de posição menor que o numero de linhas.
- //Depois de gravar toda informação no Array eu apenas sobreescrevo o arquivo original com a informação contida no array (que nao possui os dados que deseja excluir).]
+//Depois de gravar toda informação no Array eu apenas sobreescrevo o arquivo original com a informação contida no array (que nao possui os dados que deseja excluir).]
 //No meu sistema toda informação no arquivo txt, possui 5 linhas: 1 para nome, 1 para curso, 1 para serie, 1 para turma e 1 para um separador(*).
- //Isso significa que na verdade o programa pulará um total de 5 linha quando encontrar a informação a ser deletada. Isso é uma regra essencial, pois me permite armazenar
-  //somente a linha inicial de exclusao e pular a mesma + 4 linhas seguintes quando necessario
+//Isso significa que na verdade o programa pulará um total de 5 linha quando encontrar a informação a ser deletada. Isso é uma regra essencial, pois me permite armazenar
+//somente a linha inicial de exclusao e pular a mesma + 4 linhas seguintes quando necessario
       
         
 
