@@ -48,13 +48,10 @@ public class Main {
                     //ja inicio o loop com a leitura (variavel que armazena o conteudo das linhas) com valor preenchido
                     String leitura = "";
                     int contadorDeLinha= -1;
-                    //este contador irá dizer qual a primeira linha do conteudo a ser excluido, ele inicia em -1 pois a primeira interação nunca vai ser verdadeira, devido a leitura ser inicialmente "ada", 
-                    //ele contará a primeira linha como 0 apos o primeiro loop terminar, sincronizando corretamente
                     while(terminado == 0){
                         if(leitura == null){
                             //Quando leitura estiver vazia, ou seja quando ele tentou ler uma linha que nao existia (final do arquivo) ele sai do loop
                             break;
-                          //vale lembrar que leitura== null e leitura == "" sao diferentes
                         }
                         else if(leitura.equals(excluirAluno)){
                             //caso tenha dois alunos com o mesmo nome, ele irá verificar primeiro com o usuario se o aluno a ser excluido é o que possui as seguintes informações...
@@ -81,37 +78,60 @@ public class Main {
                                 escolhaExclusao = s.nextInt();
                                 //Coleta de escolha
                                 if(escolhaExclusao==1){
-                                    //Se for o aluno correto irá iniciar a exclusão
-                                    contadorDeLinha= contadorDeLinha-4;
-                                    //serve para guardar a linha inicial já que antes disso ele estava com o numero de linha correspondente ao final dos dados (veja o final do 
-                                    //programa caso queira entender melhor o porquê do -4);
-                                    FileWriter arqtemp = new FileWriter("/home/lucas/Arquivos/dadostemp.txt", true);
-                                    PrintWriter gravarArqTemp = new PrintWriter(arqtemp);
-                                    //Para escrever o arquivo temporario
+                                    contadorDeLinha = contadorDeLinha-4;
                                     buffReader.close();
                                     BufferedReader buffReader2 = new BufferedReader(new FileReader("/home/lucas/Arquivos/dados.txt"));
-                                    //reseta o buffer de leitura do arquivo original
-                                   leitura = "";
-                                  
-                                    while(true){
-                                        if (contadorDeLinha==0){
-                                            for(int i = 0; i < 5; i++){
-                                                buffReader2.readLine();
-                                            }   
-                                        }
-                                        if(leitura== null){
-                                            terminado = 1 ;
-                                            arqtemp.close();
-                                            break;
-                                        }
-                                        else if(!leitura.equals("")){
-                                            gravarArqTemp.printf(leitura+"\n");
-                                        }
-                                        leitura = buffReader2.readLine();
-                                        contadorDeLinha--;
-                                    }
-                                    
-                            }
+                                    leitura= "";
+                                    //reinicio o buffer de leitur   a e deixo a leitura vazia
+                                   
+                                   //nessa variavel iremos  ver quantas infomrações (linhas)tem esse arquivo
+                                   int tamanhoArray=0;
+                                   while(true){
+                                       leitura= buffReader2.readLine();
+                                       if(leitura==null){
+                                           break;
+                                       }
+                                       else{
+                                           tamanhoArray++;
+                                       }
+                                   }//fecha loop que coleta quantas linhas tem o arquivo
+                                   tamanhoArray = tamanhoArray - 5;
+                                   //como será deletado um conjunto de informações, eu subtraio do tamanho do arquivo quantas linhas a informação excluida tem
+                                   
+                                   buffReader2.close();
+                                   BufferedReader buffReader3 = new BufferedReader(new FileReader("/home/lucas/Arquivos/dados.txt"));
+                                   leitura="";
+                                   //novamente resenta buffer e leitura...
+                                   
+                                   //agora irei escrever todo o arquivo em um array, cada linha é uma posição nele, as linhas com as informações marcadas para exclusão seráo 
+                                   //ignoradas durante a gravação
+                                   String arquivosTemp[] = new String[tamanhoArray];
+                                   int posicaoArray = 0;
+                                   for(int i = 0; posicaoArray<tamanhoArray; i++){
+                                       leitura = buffReader3.readLine();
+                                       if(i==contadorDeLinha){
+                                           buffReader3.readLine();
+                                           buffReader3.readLine();
+                                           buffReader3.readLine();
+                                           buffReader3.readLine();
+                                       }
+                                       else{
+                                           arquivosTemp[posicaoArray]=leitura;
+                                           posicaoArray++;
+                                       }
+                                   }
+                                   buffReader3.close();
+                                   //agora o array está escrito com todo conteudo do arquivo, menos as linhas marcadas para exclusao
+                                   
+                                   //iremos sobreescreve-lo agora
+                                   FileWriter arq = new FileWriter("/home/lucas/Arquivos/dados.txt");
+                                   PrintWriter gravarArquivo = new PrintWriter(arq);
+                                   for(String info : arquivosTemp){
+                                       gravarArquivo.printf(info+"\n");
+                                   }
+                                   arq.close();
+                                   terminado=1;
+                                }//fechado a exclusao
                                 else if(escolhaExclusao == 2){
                                     //continua procura
                                     break;
@@ -126,6 +146,7 @@ public class Main {
                             contadorDeLinha++;
                             leitura = buffReader.readLine();
                         }
+                        
                     }
                     break;//termina case 2
                 case 3:
@@ -144,21 +165,21 @@ public class Main {
                 default:
                     System.out.println("Erro");
                     break;
-            }//fecha switch
-                
+            }//fecha switch          
         }//fecha while
-
     }//fecha main
-    
  }//Fecha classe
 
  //Antes de tudo vale explicar o seguinte: aparentemente em java nao existe uma função nativa para apenas deletar uma linha
  //o que isso significa? Que o jeito facil nao existe... O metodo para passar por esse obstaculo é armazenar a linha a ser excluida em uma varivael,
- // depois disso criar um outro arquivo temporario para colocar tudo o que está armazenado no original, menos a linha marcada para exclusãoo, ou seja,
- //a cada nova linha copiada para o arquivo temporario o contador para chegar a linha de exclusao diminui em 1, quando ele chegar a 0 o programa pula
- //a informação, ignorando aquele dado. No meu sistema toda informação no arquivo txt, possui 5 linhas: 1 para nome, 1 para curso, 1 para serie, 1 para turma e 1 para um separador(*).
- //Isso significa que na verdade o programa pulara um total de 5 linha quando encontrar a informação a ser deletada. Isso é uma regra essencial, pois me permite armazenar
-  //somente a linha inicial de exclusao.
+ // depois disso criar um array para colocar tudo o que está armazenado no arquivo, menos a linha marcada para exclusãoo, ou seja,
+ //toda vez que o programa for garvar uma informação no array ele irá verificar se aquele numero nao é o mesma da linha marcada para exclusao (veja na linha 112), caso seja o programa irá pular
+// aquele conjunto de informações, detalhe: nesse processo haverá um contador (denominado i) para o arquivo e um contador (denominado posicaoArray) para marcar o array, isto é necessario visto
+// o array no final vai sempre estar em um numero de posição menor que o numero de linhas.
+ //Depois de gravar toda informação no Array eu apenas sobreescrevo o arquivo original com a informação contida no array (que nao possui os dados que deseja excluir).]
+//No meu sistema toda informação no arquivo txt, possui 5 linhas: 1 para nome, 1 para curso, 1 para serie, 1 para turma e 1 para um separador(*).
+ //Isso significa que na verdade o programa pulará um total de 5 linha quando encontrar a informação a ser deletada. Isso é uma regra essencial, pois me permite armazenar
+  //somente a linha inicial de exclusao e pular a mesma + 4 linhas seguintes quando necessario
       
         
 
